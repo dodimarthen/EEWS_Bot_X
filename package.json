@@ -1,0 +1,21 @@
+{
+  "name": "x_forinaeews",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cron": "^3.1.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "got": "^14.4.2",
+    "needle": "^3.3.1",
+    "oauth-1.0a": "^2.2.6",
+    "twitter-api-v2": "^1.17.2"
+  }
+}
