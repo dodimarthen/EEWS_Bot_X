@@ -30,9 +30,13 @@ client = tweepy.Client(
     wait_on_rate_limit=True
 )
 
+# Upload media
+media = api.media_upload("shakemap.png", chunked=True, media_category="tweet_image")
+media_ids = [media.media_id]
+
 # Post a tweet
 try:
-    response = client.create_tweet(text='EEWS Broadcast Testing')
+    response = client.create_tweet(text='EEWS Broadcast Testing by python', media_ids=media_ids)
     print(f"Tweet created successfully: {response.data['text']}")
 except Exception as e:
     print(f"Error: {e}")
