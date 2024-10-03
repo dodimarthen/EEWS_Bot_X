@@ -1,5 +1,6 @@
 require("dotenv").config();
 const { TwitterApi } = require("twitter-api-v2");
+const fs = require("fs");
 
 const client = new TwitterApi({
   appKey: process.env.API_KEY,
@@ -8,12 +9,36 @@ const client = new TwitterApi({
   accessSecret: process.env.ACCESS_TOKEN_SECRET,
 });
 
-async function tweet(message) {
+async function uploadMedia(mediaPath) {
   try {
-    const response = await client.v2.tweet(message);
-    console.log("Tweet sent successfully:", response);
+    const mediaData = fs.readFileSync(mediaPath); // Read the media file (image)
+    const mediaType = "shakemap/png"; // Define the media type (adjust as needed for different formats)
+
+    // Upload media to Twitter
+    const mediaId = await client.v1.uploadMedia(mediaData, {
+      mimeType: mediaType,
+    });
+
+    console.log("Media uploaded successfully. Media ID:", mediaId);
+    return mediaId;
   } catch (error) {
-    console.error("Error sending tweet:", error);
+    console.error("Error uploading media:", error);
+  }
+}
+
+async function tweetWithMedia(message, mediaPath) {
+  try {
+    const mediaId = await uploadMedia(mediaPath); // Upload the media and get media_id
+
+    if (mediaId) {
+      // Post tweet with the uploaded media
+      const response = await client.v2.tweet(message, {
+        media: { media_ids: [mediaId] },
+      });
+      console.log("Tweet with media sent successfully:", response);
+    }
+  } catch (error) {
+    console.error("Error sending tweet with media:", error);
   }
 }
 
@@ -27,4 +52,4 @@ async function getAccountInfo() {
 }
 
 getAccountInfo();
-tweet("Hello Twitter using node js!");
+tweetWithMedia("Testing tweeting with media by node js!", "shakemap.png");
